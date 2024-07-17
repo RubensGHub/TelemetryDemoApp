@@ -7,10 +7,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenTelemetry.Trace;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenTelemetryTracing(tracerProviderBuilder =>
+// Configure OpenTelemetry
+builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
 {
     tracerProviderBuilder
         .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("MyAspNetCoreService"))
@@ -41,11 +45,14 @@ builder.Logging.ClearProviders()
         loggerOptions
             .SetResourceBuilder(resourceBuilder)
             .AddProcessor(new CustomLogProcessor())
-            .AddConsoleExporter();
-
+            .AddOtlpExporter(options =>
+        {
+            options.Endpoint = new Uri("http://localhost:4317");
+        });
         loggerOptions.IncludeFormattedMessage = true;
         loggerOptions.IncludeScopes = true;
         loggerOptions.ParseStateValues = true;
+        
     });
 
 var app = builder.Build();
