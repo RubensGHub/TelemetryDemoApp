@@ -1,3 +1,7 @@
+Ce README est constitué de deux parties :  
+    1- Explication de la télémétrie
+    2- Démonstration avec l'intéraction entre deux applications basiques.  
+
 # Explications de la télémétrie dotnet
 L'objectif de ce rapport est de fournir une vue d'ensemble des techniques et des outils de surveillance et d'analyse des systèmes distribués. Dans un contexte où les architectures de microservices et les environnements cloud natifs sont de plus en plus courants, il est crucial de comprendre comment surveiller efficacement les performances et les comportements de ces systèmes.  
 Ce rapport se concentre sur trois types de données principales : les logs, les traces distribuées et les métriques.  
@@ -100,3 +104,4 @@ Les données de Prometheus et Loki peuvent être visualisés facilement à l'aid
 > Le choix de l'outil peut être adapté en fonction des besoins. OpenTelemetry fait en sorte que le passage d'un outil à un autre soit simple.
 > Dans notre projet nous choisirons Prometheus.
 
+# TelemetryDemoApp

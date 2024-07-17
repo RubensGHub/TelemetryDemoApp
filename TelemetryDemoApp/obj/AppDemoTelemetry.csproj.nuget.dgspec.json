@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\AppDemoTelemetry\\AppDemoTelemetry.csproj": {}
+    "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\TelemetryDemoApp\\AppDemoTelemetry.csproj": {}
   },
   "projects": {
-    "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\AppDemoTelemetry\\AppDemoTelemetry.csproj": {
+    "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\TelemetryDemoApp\\AppDemoTelemetry.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\AppDemoTelemetry\\AppDemoTelemetry.csproj",
+        "projectUniqueName": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\TelemetryDemoApp\\AppDemoTelemetry.csproj",
         "projectName": "AppDemoTelemetry",
-        "projectPath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\AppDemoTelemetry\\AppDemoTelemetry.csproj",
+        "projectPath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\TelemetryDemoApp\\AppDemoTelemetry.csproj",
         "packagesPath": "C:\\Users\\r-tueux\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\AppDemoTelemetry\\obj\\",
+        "outputPath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\TelemetryDemoApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\r-tueux\\AppData\\Roaming\\NuGet\\NuGet.Config",

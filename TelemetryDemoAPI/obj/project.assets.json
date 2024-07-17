@@ -8728,11 +8728,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\LogsDemoApi\\TodoApi.csproj",
+      "projectUniqueName": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\TelemetryDemoAPI\\TodoApi.csproj",
       "projectName": "TodoApi",
-      "projectPath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\LogsDemoApi\\TodoApi.csproj",
+      "projectPath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\TelemetryDemoAPI\\TodoApi.csproj",
       "packagesPath": "C:\\Users\\r-tueux\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\LogsDemoApi\\obj\\",
+      "outputPath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\TelemetryDemoAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\r-tueux\\AppData\\Roaming\\NuGet\\NuGet.Config",

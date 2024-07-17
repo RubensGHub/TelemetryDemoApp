@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "MjadMxQVHS0=",
+  "dgSpecHash": "WjRWgb0Y+eA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\LogsDemoApi\\TodoApi.csproj",
+  "projectFilePath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\TelemetryDemoAPI\\TodoApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\r-tueux\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\r-tueux\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
