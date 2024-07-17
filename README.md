@@ -1,35 +1,43 @@
-Ce README est constitué de deux parties :  
-    1- Explication de la télémétrie
-    2- Démonstration avec l'intéraction entre deux applications basiques.  
+# TelemetryDemoApp
 
-# Explications de la télémétrie dotnet
+    1. Explication de la télémétrie  
+    2. Démonstration avec l'intéraction entre deux applications basiques.  
+
+## Partie 1 - Explications de la télémétrie dotnet
+
 L'objectif de ce rapport est de fournir une vue d'ensemble des techniques et des outils de surveillance et d'analyse des systèmes distribués. Dans un contexte où les architectures de microservices et les environnements cloud natifs sont de plus en plus courants, il est crucial de comprendre comment surveiller efficacement les performances et les comportements de ces systèmes.  
 Ce rapport se concentre sur trois types de données principales : les logs, les traces distribuées et les métriques.  
 Nous explorerons les définitions, l'importance, les cas d'utilisation et les outils disponibles pour chaque type de données.  
 La télémétrie se rapporte à la surveillance et à l'analyse d'informations de systèmes informatiques visant à suivre les performances et à identifier les problèmes. Ce terme est directement lié au terme "d'observabilité".  
 L'observabilité consiste à analyser l'état et mesurer les performances de notre système/application, sans avoir à forcément comprendre comment fonctionne chaque élément de l'application.  
 
-L'utilisation d'OpenTelemetry se présentera également avec un exemple d'utilisation : https://github.com/RubensGHub/AppTestTelemetry.
+L'utilisation d'OpenTelemetry se présentera également avec un exemple d'utilisation : <https://github.com/RubensGHub/AppTestTelemetry>.
 
-## OpenTelemetry  
+### OpenTelemetry  
+
 OpenTelemetry est un projet Open-source en plein développement supporté par la CNCFP. Il a donc de nombreux différents contributeurs qui améliore régulièrement l'outil.  
 l'objectif d'OpenTelemetry est de créer un standard pour instrumenter nos applications, c'est à dire un outil qui s'adapte peu importe le langage et l'outil de back-end utilisé.  
 OpenTelemetry peut récolter chacun des trois **pilliers** de la télémétrie :
+
 * Logs
 * Traces
 * Metrics
 
-## Logs 
-### définition
+### Logs
+
+#### Définition des logs
+
 Les logs sont des enregistrements d'événements produits par les applications, les services et les systèmes d'exploitation. Ils jouent un rôle crucial dans le diagnostic des problèmes, la compréhension des comportements des systèmes et le suivi des activités.  
 Les logs peuvent inclure des informations sur les erreurs, les transactions utilisateur, les accès aux ressources, et bien plus encore
 
-### Cas d'utilisation des logs
-- **Diagnostic et Débogage** : Identifier et résoudre les erreurs et les anomalies dans les applications.
-- **Sécurité** : Suivre les tentatives d'accès et détecter les comportements suspects.
-- **Audit et Conformité** : Maintenir des enregistrements des activités pour répondre aux exigences réglementaires.
+#### Cas d'utilisation des logs
 
-### Les différents outils de logging
+* **Diagnostic et Débogage** : Identifier et résoudre les erreurs et les anomalies dans les applications.
+* **Sécurité** : Suivre les tentatives d'accès et détecter les comportements suspects.
+* **Audit et Conformité** : Maintenir des enregistrements des activités pour répondre aux exigences réglementaires.
+
+#### Les différents outils de logging
+
 Après avoir collecté des logs avec fluendt, logstash, ou dans ce projet OpenTelemetry Collector, nous pouvons exporter les données vers des services de back-end. Voici un tableau comparatif des différentes solutions envisageables et leurs avantages (ici nous utiliserons Loki) :
 
 | Critères / Outils | Loki | Elasticsearch | Graylog |
@@ -47,16 +55,20 @@ Après avoir collecté des logs avec fluendt, logstash, ou dans ce projet OpenTe
 > Le choix de l'outil peut être adapté en fonction des besoins. OpenTelemetry fait en sorte que le passage d'un outil à un autre soit simple.  
 > Dans notre projet d'exemple nous choisirons Loki. Ce-dernier est moins lourd qu'elasticsearch et plus efficace pour des cas d'utilisation.
 
-## Traces
-### Définition
+### Traces
+
+#### Définition des traces
+
 Les traces distribuées sont des enregistrements des transactions qui se déroulent à travers les différents composants d'un système distribué. Elles permettent de suivre le parcours complet d'une requête, de son entrée dans le système à sa sortie, en passant par tous les services intermédiaires.
 
-### Cas d'utilisation des traces
-- **Analyse de Performance** : Identifier les goulots d'étranglement et optimiser les performances des applications.
-- **Diagnostic de Pannes** : Comprendre les causes des défaillances et des erreurs dans les transactions.
-- **Visualisation des Flux** : Avoir une vue d'ensemble des interactions entre les services dans une architecture microservices.
+#### Cas d'utilisation des traces
+
+* **Analyse de Performance** : Identifier les goulots d'étranglement et optimiser les performances des applications.
+* **Diagnostic de Pannes** : Comprendre les causes des défaillances et des erreurs dans les transactions.
+* **Visualisation des Flux** : Avoir une vue d'ensemble des interactions entre les services dans une architecture microservices.
   
-### Comparatif des outils pour les traces
+#### Comparatif des outils pour les traces
+
 De la même façon que les logs, il existe différents outils pour traiter et visualiser les traces reçues. Voici les principaux :
 
 | Critères / Outils | Jaeger | Zipkin |
@@ -74,18 +86,21 @@ De la même façon que les logs, il existe différents outils pour traiter et vi
 > Ici, il sera préférable d'utiliser Jaeger pour des environnements demandant plus de scalabilité.  
 > Zipkin est plus efficace pour des demandes plus simples ou pour parfois mieux visualiser les traces en cascade.
 
+### Metrics
 
-## Metrics
-### Définition
+#### Définition des metrics
+
 Les métriques sont des mesures quantitatives sur les performances, les ressources et l'état des systèmes. Elles incluent des informations telles que l'utilisation du CPU, la latence des requêtes, le taux d'erreur, et plus encore. Les métriques sont essentielles pour le monitoring en temps réel et la gestion des performances des systèmes.
 
-### Cas d'utilisation des metrics
-- **Monitoring en Temps Réel** : Surveiller l'état des systèmes et des applications pour détecter et réagir rapidement aux problèmes.
-- **Optimisation des Performances** : Analyser les tendances et les anomalies pour améliorer les performances des systèmes.
-- **Alerting** : Déclencher des alertes basées sur des seuils définis pour prévenir les incidents avant qu'ils ne deviennent critiques.
+#### Cas d'utilisation des metrics
 
-### Comparatif des outils pour les metrics
-Enfin, l'outil que nous utiliserons dans notre solution est Prometheus.   
+* **Monitoring en Temps Réel** : Surveiller l'état des systèmes et des applications pour détecter et réagir rapidement aux problèmes.
+* **Optimisation des Performances** : Analyser les tendances et les anomalies pour améliorer les performances des systèmes.
+* **Alerting** : Déclencher des alertes basées sur des seuils définis pour prévenir les incidents avant qu'ils ne deviennent critiques.
+
+#### Comparatif des outils pour les metrics
+
+Enfin, l'outil que nous utiliserons dans notre solution est Prometheus.
 Les données de Prometheus et Loki peuvent être visualisés facilement à l'aide de Grafana :
 
 | Critères / Outils | Prometheus | Graphite | Datadog | InfluxDB |
@@ -98,10 +113,9 @@ Les données de Prometheus et Loki peuvent être visualisés facilement à l'aid
 | **Facilité d'utilisation** | Relativement simple à configurer avec une documentation complète et une grande communauté. | Installation et configuration plus techniques, nécessite des connaissances avancées. | Interface utilisateur intuitive, installation simple avec support commercial. | Interface utilisateur claire avec des outils comme Chronograf, mais nécessite une configuration initiale. |
 | **Communauté / Support** | Grande communauté open-source, support commercial via des entreprises tierces. | Communauté active, mais plus restreinte, avec moins de support commercial. | Large communauté, support commercial direct et ressources abondantes. | Communauté active et grand nombre de ressources, support commercial via InfluxData. |
 
-
 >[!TIP]
 >
 > Le choix de l'outil peut être adapté en fonction des besoins. OpenTelemetry fait en sorte que le passage d'un outil à un autre soit simple.
 > Dans notre projet nous choisirons Prometheus.
 
-# TelemetryDemoApp
+## Partie 2 - Utilisation de l'app de démo
