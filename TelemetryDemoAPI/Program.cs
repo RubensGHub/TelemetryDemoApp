@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen();
 
 // Define attributes for your application
 
+/*
 var resourceBuilder = ResourceBuilder.CreateDefault()
     // add attributes for the name and version of the service
     .AddService(serviceName: "Cosoluce.RandomApp.LogsDemoApi", serviceVersion: "1.0.1")
@@ -34,6 +35,7 @@ var resourceBuilder = ResourceBuilder.CreateDefault()
         
     });
 
+
 builder.Logging.ClearProviders()
     .AddOpenTelemetry(loggerOptions =>
     {
@@ -46,6 +48,8 @@ builder.Logging.ClearProviders()
         loggerOptions.IncludeScopes = false;
         loggerOptions.ParseStateValues = false;
     });
+
+*/
 
 var app = builder.Build();
 
@@ -63,6 +67,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+/*
 app.MapGet("/", (ILogger<Program> logger) =>
 {
     logger.LogInformation("Hello user!");
@@ -77,7 +82,8 @@ app.MapPost("/login", (ILogger<Program> logger, [FromBody] LoginData data) =>
     logger.LogWarning("User login failed: Username {Username}", data.Username);
     return Results.Unauthorized();
 });
+*/
 
 app.Run();
 
-internal record LoginData(string Username, string Password);
+// internal record LoginData(string Username, string Password);

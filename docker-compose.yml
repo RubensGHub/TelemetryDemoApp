@@ -1,31 +1,43 @@
 version: '3.7'
 name: telemetry-demo-app
+
 services:
+  # OpenTelemetry Collector
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
+    image: otel/opentelemetry-collector:latest
+    container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
-      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+      - ./config/otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
       - "4317:4317" # OTLP gRPC receiver
       - "8889:8889" # Prometheus metrics
+    depends_on:
+      - zipkin-all-in-one
 
+  # http://localhost:9090/
   prometheus:
+    container_name: prometheus
     image: prom/prometheus:latest
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
 
+  # http://localhost:3100/
   loki:
+    container_name: loki
     image: grafana/loki:latest
-    ports:
-      - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
-      - ./loki-config.yaml:/etc/loki/local-config.yaml
+      - ./config/loki-config.yaml:/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+   
 
-  zipkin:
+  # http://localhost:9411/zipkin
+  zipkin-all-in-one:
+    container_name: zipkin
     image: openzipkin/zipkin:latest
     ports:
       - "9411:9411"

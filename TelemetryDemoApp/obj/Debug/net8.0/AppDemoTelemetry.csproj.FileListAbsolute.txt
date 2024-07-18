@@ -83,3 +83,10 @@ C:\Users\r-tueux\source\Repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug
 C:\Users\r-tueux\source\Repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\OpenTelemetry.Instrumentation.Http.dll
 C:\Users\r-tueux\source\Repos\Projet\TelemetryDemoApp\TelemetryDemoApp\obj\Debug\net8.0\AppDemoTelemetry.csproj.AssemblyReference.cache
 C:\Users\r-tueux\source\Repos\Projet\TelemetryDemoApp\TelemetryDemoApp\obj\Debug\net8.0\AppDemoT.751875D6.Up2Date
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\Google.Protobuf.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\Grpc.Core.Api.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\Grpc.Net.Client.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\Grpc.Net.Common.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Binder.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\OpenTelemetry.Exporter.OpenTelemetryProtocol.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\OpenTelemetry.Extensions.Hosting.dll

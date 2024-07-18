@@ -5,21 +5,36 @@ receivers:
       http:
 
 exporters:
+  otlphttp:
+    endpoint: http://loki:3100/otlp/v1/logs
+
+  zipkin:
+    endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
+    format: proto
+  
   prometheus:
     endpoint: "0.0.0.0:8889"
 
-  loki:
-    endpoint: "http://loki:3100/loki/api/v1/push"
+extensions:
+  health_check:
 
-  zipkin:
-    endpoint: "http://zipkin:9411/api/v2/spans"
+processors:
+  batch:
 
 service:
+  extensions: [health_check]
   pipelines:
+    logs:
+      receivers: [otlp]
+      processors: []
+      exporters: [otlphttp]
+
     traces:
       receivers: [otlp]
-      exporters: [zipkin, loki]
+      processors: [batch]
+      exporters: [zipkin]
 
     metrics:
       receivers: [otlp]
+      processors: [batch]
       exporters: [prometheus]
