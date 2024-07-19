@@ -4,20 +4,11 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
-
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-using System.Net.Http;
-using System.Net.Security;
+using Microsoft.AspNetCore.Http.Features;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
-using System.Collections.Generic;
-using System.Threading;
-using Microsoft.Extensions.Diagnostics.Metrics;
+
+
 
 // Nécessaire si le collecteur n'expose pas un endpoint https
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
@@ -27,16 +18,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configuration des ressources pour identifier le service
 var resourceBuilder = ResourceBuilder.CreateDefault()
-    .AddService(serviceName: "Cosoluce.RandomApp.LogsDemoApi", serviceVersion: "1.0.1")
+    .AddService(serviceName: "Cosoluce.AppDemo", serviceVersion: "1.0.1")
     .AddTelemetrySdk()
     .AddAttributes(new Dictionary<string, object>
     {
-        ["Nom/ID du host"] = Environment.MachineName,
-        ["Système d'exploitation"] = RuntimeInformation.OSDescription,
-        ["environnement"] =
+        ["Host.name"] = Environment.MachineName,
+        ["OS.name"] = RuntimeInformation.OSDescription,
+        ["Environment"] =
             builder.Environment.EnvironmentName.ToLowerInvariant(),
-        ["texte aléatoire"] = "Je rajoute ce que je veux"
-        
     });
 
 // Configure OpenTelemetry pour les logs
@@ -60,7 +49,7 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerOptions =>
         .SetResourceBuilder(resourceBuilder)
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()
-        .AddSource("MyActivitySource")
+        .AddSource("ActivitesApp")
         .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
 });
 
@@ -79,12 +68,16 @@ builder.Services.AddOpenTelemetry().WithMetrics(MetricsOptions =>
 var app = builder.Build();
 
 // Création des providers
-var activitySource = new ActivitySource("MyActivitySource");
+var activitySource = new ActivitySource("ActiviteApp");
 var meter = new Meter("MyMeter");
 
 // Création d'instruments de metrics
 var requestCounter = meter.CreateCounter<int>("compute_requests");
-var httpClient = new HttpClient();
+using var handler = new SocketsHttpHandler()
+{
+    ActivityHeadersPropagator = DistributedContextPropagator.CreateDefaultPropagator(),
+};
+using var client = new HttpClient(handler);
 
 // Endpoint racine qui va, à chaque appel : incrémenter le compteur de 1, créer une activité, logger des traces
 app.MapGet("/", async (ILogger<Program> logger) =>
@@ -95,15 +88,23 @@ app.MapGet("/", async (ILogger<Program> logger) =>
     {
         // on peut ajouter des informations à l'activité, qu'on va pouvoir visionner sur Zipkin.
         activity?.AddTag("sample", "value");
-        activity?.AddBaggage("SampleContext", "BaggageIci");
+        Baggage.SetBaggage("user.id", "12345");
 
         // Les requêtes http sont suivies par AddHttpClientInstrumentation
-        var str1 = await httpClient.GetStringAsync("https://example.com");
-        var str2 = await httpClient.GetStringAsync("https://www.meziantou.net");
+        await client.GetStringAsync("https://example.com");
+        var str1 = await client.GetStringAsync("https://localhost:7123/demo");
 
         logger.LogInformation("Response1 length: {Length}", str1.Length);
-        logger.LogInformation("Response2 length: {Length}", str2.Length);
     }
+
+    return Results.Ok();
+});
+
+// Autre endpoint de test
+app.MapGet("/test", (HttpContext context) =>
+{
+    var activity = context.Features.Get<IHttpActivityFeature>()?.Activity;
+    activity?.SetTag("foo", "bar");
 
     return Results.Ok();
 });

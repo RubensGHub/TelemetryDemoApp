@@ -5,8 +5,10 @@ receivers:
       http:
 
 exporters:
-  otlphttp:
-    endpoint: http://loki:3100/otlp/v1/logs
+  otlphttp/logs:
+    endpoint: http://loki:3100/otlp
+    tls:
+      insecure: true
 
   zipkin:
     endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
@@ -26,8 +28,7 @@ service:
   pipelines:
     logs:
       receivers: [otlp]
-      processors: []
-      exporters: [otlphttp]
+      exporters: [otlphttp/logs]
 
     traces:
       receivers: [otlp]

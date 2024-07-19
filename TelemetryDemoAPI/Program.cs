@@ -5,43 +5,54 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Security;
+using OpenTelemetry;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Metrics;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Diagnostics.Metrics;
+using Microsoft.AspNetCore.Http.Features;
+using System.Net.Http;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using System.Collections.Generic;
+using System.Threading;
+
+// This is required if the collector doesn't expose an https endpoint
+AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configure services
+builder.Services.AddControllers();
 
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddDbContext<TodoContext>(opt =>
     opt.UseInMemoryDatabase("TodoList"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Define attributes for your application
-
-/*
 var resourceBuilder = ResourceBuilder.CreateDefault()
-    // add attributes for the name and version of the service
-    .AddService(serviceName: "Cosoluce.RandomApp.LogsDemoApi", serviceVersion: "1.0.1")
-    // add attributes for the OpenTelemetry SDK version
+    .AddService(serviceName: "Cosoluce.AppDemoAPI", serviceVersion: "1.0.1")
     .AddTelemetrySdk()
-    // add custom attributes
     .AddAttributes(new Dictionary<string, object>
     {
-        ["Nom/ID du host"] = Environment.MachineName,
-        ["Système d'exploitation"] = RuntimeInformation.OSDescription,
-        ["environnement"] =
+        ["host.name"] = Environment.MachineName,
+        ["OS.name"] = RuntimeInformation.OSDescription,
+        ["environment"] =
             builder.Environment.EnvironmentName.ToLowerInvariant(),
-        ["texte aléatoire"] = "Je rajoute ce que je veux"
-        
     });
 
-
+// Configure OpenTelemetry pour les logs
 builder.Logging.ClearProviders()
     .AddOpenTelemetry(loggerOptions =>
     {
         loggerOptions
-            // .SetResourceBuilder(resourceBuilder)
-            // .AddProcessor(new CustomLogProcessor())
+            .SetResourceBuilder(resourceBuilder)
+            .AddProcessor(new CustomLogProcessor())
             .AddConsoleExporter();
 
         loggerOptions.IncludeFormattedMessage = false;
@@ -49,10 +60,35 @@ builder.Logging.ClearProviders()
         loggerOptions.ParseStateValues = false;
     });
 
-*/
+// Configure OpenTelemetry pour les traces
+builder.Services.AddOpenTelemetry().WithTracing(tracerOptions =>
+{
+    tracerOptions
+        .SetResourceBuilder(resourceBuilder)
+        .AddHttpClientInstrumentation()
+        .AddAspNetCoreInstrumentation()
+        .AddSource("ActivitesAPI")
+        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
+});
+
+// Configure OpenTelemetry pour les metrics
+builder.Services.AddOpenTelemetry().WithMetrics(MetricsOptions =>
+{
+    MetricsOptions
+        .SetResourceBuilder(resourceBuilder)
+        .AddHttpClientInstrumentation()
+        .AddAspNetCoreInstrumentation()
+        .AddMeter("MyMeter")
+        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
+});
 
 var app = builder.Build();
 
+// Création des providers
+var activitySource = new ActivitySource("ActivitesAPI");
+var meter = new Meter("MyMeter");
+
+var requestCounter = meter.CreateCounter<int>("compute_requests");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -60,20 +96,30 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
-/*
-app.MapGet("/", (ILogger<Program> logger) =>
+app.MapGet("/demo", async () =>
 {
-    logger.LogInformation("Hello user!");
-    Console.WriteLine("Test erreur critique :");
-    logger.LogCritical("Erreur critique");
-    return("Hello world");
+    requestCounter.Add(1);
+    using (var activity = activitySource.StartActivity("TestDemo"))
+    {
+        await Task.Delay(500);
+        var client = new HttpClient();
+        await client.GetStringAsync("https://localhost:7123/delay");
+    }
+    return Results.Ok();
+});
+
+app.MapGet("/delay", async() =>
+{
+    using (var activity = activitySource.StartActivity("TestDemo2"))
+    {
+        await Task.Delay(100);
+    }
+
+    return Results.Ok();
 });
 
 app.MapPost("/login", (ILogger<Program> logger, [FromBody] LoginData data) =>
@@ -82,8 +128,8 @@ app.MapPost("/login", (ILogger<Program> logger, [FromBody] LoginData data) =>
     logger.LogWarning("User login failed: Username {Username}", data.Username);
     return Results.Unauthorized();
 });
-*/
+
 
 app.Run();
 
-// internal record LoginData(string Username, string Password);
+internal record LoginData(string Username, string Password);

@@ -1286,3 +1286,12 @@ C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\obj\Debug
 C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\obj\Debug\net8.0\TodoApi.pdb
 C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\obj\Debug\net8.0\TodoApi.genruntimeconfig.cache
 C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\obj\Debug\net8.0\ref\TodoApi.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\bin\Debug\net8.0\Google.Protobuf.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\bin\Debug\net8.0\Grpc.Core.Api.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\bin\Debug\net8.0\Grpc.Net.Client.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\bin\Debug\net8.0\Grpc.Net.Common.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Binder.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\bin\Debug\net8.0\OpenTelemetry.Exporter.OpenTelemetryProtocol.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\bin\Debug\net8.0\OpenTelemetry.Extensions.Hosting.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\bin\Debug\net8.0\OpenTelemetry.Instrumentation.AspNetCore.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\bin\Debug\net8.0\OpenTelemetry.Instrumentation.Http.dll

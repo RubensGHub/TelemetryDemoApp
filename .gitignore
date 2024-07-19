@@ -1,0 +1,15 @@
+# Ignorer tous les fichiers .log
+*.log
+
+# Ignorer les répertoires de cache
+node_modules/
+.vs/
+
+# Ignorer les fichiers de configuration spécifiques à l'IDE
+.idea/
+*.suo
+*.user
+
+# Ignorer les fichiers temporaires
+*.tmp
+*.bak
