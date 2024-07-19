@@ -1,12 +1,14 @@
 # TelemetryDemoApp
+
 Ce rapport est constitué de deux parties :  
+
 1. Définitions et explications de l'observabilité et de la télémétrie
-2. Démonstration avec l'intéraction entre deux applications basiques 
+2. Démonstration avec l'intéraction entre deux applications basiques
 
 ## Partie 1 - Explications de la télémétrie dotnet
 
 L'objectif de ce rapport est de fournir une vue d'ensemble des techniques et des outils de surveillance et d'analyse des systèmes distribués. Dans un contexte où les architectures de microservices et les environnements cloud natifs sont de plus en plus courants, il est crucial de comprendre comment surveiller efficacement les performances et les comportements de ces systèmes.  
-Cela se rapporte au sujet de la télémétrie. Ce-dernier est étroitement lié à l'observabilité, qui consiste à analyser l'état et mesurer les performances de notre système/application, sans avoir à forcément comprendre comment fonctionne chaque élément de l'application.     
+Cela se rapporte au sujet de la télémétrie. Ce-dernier est étroitement lié à l'observabilité, qui consiste à analyser l'état et mesurer les performances de notre système/application, sans avoir à forcément comprendre comment fonctionne chaque élément de l'application.  
 Nous explorerons les définitions, l'importance, les cas d'utilisation et les outils disponibles pour les trois données "pilliers" de la télémétrie :
 
 * Logs
@@ -27,7 +29,6 @@ Etudions donc ces différentes données :
 
 Les logs sont des enregistrements d'événements produits par les applications, les services et les systèmes d'exploitation. Ils jouent un rôle crucial dans le diagnostic des problèmes, la compréhension des comportements des systèmes et le suivi des activités.  
 Les logs peuvent inclure des informations sur les erreurs, les transactions utilisateur, les accès aux ressources etc.  
-
 
 #### Cas d'utilisation des logs
 
@@ -52,7 +53,7 @@ Après avoir collecté des logs avec fluendt, logstash, ou ici OpenTelemetry , n
 >[!TIP]
 >
 > Le choix de l'outil peut être adapté en fonction des besoins. OpenTelemetry fait en sorte que le passage d'un outil à un autre soit simple.
-> D'autres choix (pas forcément exportable à partir d'OpenTelemetry, comme Graylog) incluent par exemple Splunk, 
+> D'autres choix (pas forcément exportable à partir d'OpenTelemetry, comme Graylog) incluent par exemple Splunk.
 > Dans notre projet d'exemple nous choisirons Loki. Ce-dernier est moins lourd qu'elasticsearch et plus efficace pour des cas d'utilisation.
 
 ### Traces
@@ -80,7 +81,6 @@ De la même façon que les logs, il existe différents outils pour traiter et vi
 | **Intégrations**       | Supporte de nombreuses intégrations avec des outils comme Prometheus, Grafana, et OpenTelemetry. | Bon support d'intégration avec divers outils, mais un peu moins étendu que Jaeger. | Intégration transparente avec Grafana et Prometheus, ainsi qu'avec d'autres outils d'observabilité. |
 | **Scalabilité**        | Conçu pour être hautement scalable, capable de gérer de grandes quantités de données de traçage dans des environnements distribués complexes. | Scalabilité efficace, mais peut nécessiter plus de configuration pour des environnements très larges. | Hautement scalable, conçu pour gérer de grandes quantités de traces de manière efficace et avec une faible empreinte mémoire. |
 | **Communauté / Support** | Grande communauté active, avec un soutien commercial disponible et une abondance de ressources et de documentations. | Bonne communauté et support, mais légèrement moins étendu que celui de Jaeger. | Bonne communauté, soutenue par Grafana Labs, avec une documentation complète et des options de support commercial. |
-
 
 >[!TIP]
 >
@@ -115,8 +115,6 @@ Enfin, voici quelques outils de monitoring :
 | **Performance**               | Très performant pour la collecte et la requête de métriques à haute fréquence. | Performant pour les métriques à basse et moyenne fréquence. | Très performant pour l'écriture et la lecture de grandes quantités de données en temps réel. |
 | **Facilité d'utilisation**    | Relativement simple à installer et configurer. | Installation et configuration plus techniques. | Installation simple, interface utilisateur intuitive et riche. |
 | **Communauté / Support**      | Grande communauté open-source, support commercial via des entreprises tierces. | Communauté active, mais moins de support commercial. | Grande communauté active, support commercial et documentation abondante. |
-
-
 
 >[!TIP]
 >
