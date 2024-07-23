@@ -1,53 +1,63 @@
-version: '3.7'
+version: '3'
 name: telemetry-demo-app
 
 services:
-  # OpenTelemetry Collector
   otel-collector:
+    container_name: otel
     image: otel/opentelemetry-collector:latest
-    container_name: otel-collector
-    command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
-      - ./config/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+      - ./config/otel-collector-config.yaml:/etc/otel/config.yaml
+    command:
+      - '--config=/etc/otel/config.yaml'
     ports:
-      - "4317:4317" # OTLP gRPC receiver
-      - "8889:8889" # Prometheus metrics
+      - "4317:4317" #grpc
+      - "4318:4318" #http
     depends_on:
-      - zipkin-all-in-one
-      - jaeger-all-in-one
+      - loki
 
-  # http://localhost:9090/
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
 
-  # http://localhost:3100/
   loki:
     container_name: loki
-    image: grafana/loki:latest
-    command: -config.file=/etc/loki/local-config.yaml
-    volumes:
-      - ./config/loki-config.yaml:/etc/loki/local-config.yaml
+    image: grafana/loki:main
     ports:
       - "3100:3100"
-   
+    volumes:
+      - ./config/loki-config.yaml:/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
 
-  # http://localhost:9411/zipkin
   zipkin-all-in-one:
     container_name: zipkin
     image: openzipkin/zipkin:latest
     ports:
       - "9411:9411"
-  
-  # http://localhost:16686/
+
   jaeger-all-in-one:
+    container_name: jaeger
     image: jaegertracing/all-in-one:1.46
     environment:
       - COLLECTOR_OTLP_ENABLED=true
     ports:
-      - "4318:4317"
       - "16686:16686"
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:11.0.0
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+      - GF_FEATURE_TOGGLES_ENABLE=accessControlOnCall
+      - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-lokiexplore-app/grafana-lokiexplore-app-latest.zip;grafana-lokiexplore-app
+    ports:
+      - 3000:3000/tcp
+    volumes:
+      - ./grafana:/etc/grafana/provisioning

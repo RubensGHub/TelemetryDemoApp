@@ -6,7 +6,7 @@ receivers:
 
 exporters:
   otlphttp/logs:
-    endpoint: http://loki:3100/otlp
+    endpoint: "http://loki:3100/otlp"
     tls:
       insecure: true
 
@@ -39,7 +39,7 @@ service:
       receivers: [otlp]
       processors: [batch]
       exporters: [zipkin, otlphttp/jaeger]
-
+      
     metrics:
       receivers: [otlp]
       processors: [batch]
