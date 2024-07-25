@@ -1,66 +1,53 @@
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Models;
+using GameLibraryAPI.Models;
 using System.Runtime.InteropServices;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Security;
-using OpenTelemetry;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Diagnostics.Metrics;
-using Microsoft.AspNetCore.Http.Features;
-using System.Net.Http;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
-using System.Collections.Generic;
-using System.Threading;
 
-// This is required if the collector doesn't expose an https endpoint
+// Nécessaire si le collecteur n'expose pas un endpoint https
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure services
+// Configuration des services
 builder.Services.AddControllers();
 
-// Add services to the container.
+// Ajout des services aux conteneurs
 builder.Services.AddControllers();
-builder.Services.AddDbContext<TodoContext>(opt =>
+builder.Services.AddDbContext<GameContext>(opt =>
     opt.UseInMemoryDatabase("TodoList"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var resourceBuilder = ResourceBuilder.CreateDefault()
-    .AddService(serviceName: "Cosoluce.AppDemoAPI", serviceVersion: "1.0.1")
+    .AddService(serviceName: "AppDemoAPI", serviceVersion: "1.0.0")
     .AddTelemetrySdk()
     .AddAttributes(new Dictionary<string, object>
     {
         ["host.name"] = Environment.MachineName,
         ["OS.name"] = RuntimeInformation.OSDescription,
-        ["environment"] =
-            builder.Environment.EnvironmentName.ToLowerInvariant(),
+        ["environment"] = builder.Environment.EnvironmentName.ToLowerInvariant(),
     });
 
-// Configure OpenTelemetry pour les logs
+// Configuration d'OpenTelemetry pour les logs
 builder.Logging.ClearProviders()
     .AddOpenTelemetry(loggerOptions =>
-    {
-        loggerOptions
-            .SetResourceBuilder(resourceBuilder)
-            .AddProcessor(new CustomLogProcessor())
-            .AddConsoleExporter();
-
+    {   
         loggerOptions.IncludeFormattedMessage = false;
         loggerOptions.IncludeScopes = false;
         loggerOptions.ParseStateValues = false;
+        loggerOptions
+            .SetResourceBuilder(resourceBuilder)
+            .AddProcessor(new CustomLogProcessor())
+            .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
     });
 
-// Configure OpenTelemetry pour les traces
+// Configuration d'OpenTelemetry pour les traces
 builder.Services.AddOpenTelemetry().WithTracing(tracerOptions =>
 {
     tracerOptions
@@ -88,9 +75,10 @@ var app = builder.Build();
 var activitySource = new ActivitySource("ActivitesAPI");
 var meter = new Meter("MyMeter");
 
-var requestCounter = meter.CreateCounter<int>("compute_requests");
+// Création d'instruments de métriques
+var requestCounter = meter.CreateCounter<int>("requetes");
 
-// Configure the HTTP request pipeline.
+// Configuration du pipeline de requête HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -100,20 +88,25 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
+// Endpoint de démonstration d'une requête passant par plusieurs services
 app.MapGet("/demo", async () =>
 {
     requestCounter.Add(1);
+    await Task.Delay(200);
     using (var activity = activitySource.StartActivity("TestDemo"))
     {
-        await Task.Delay(500);
+        await Task.Delay(300);
         var client = new HttpClient();
         await client.GetStringAsync("https://localhost:7123/delay");
     }
     return Results.Ok();
 });
 
+// Second endpoint pour simuler une action 
 app.MapGet("/delay", async() =>
-{
+{   
+    requestCounter.Add(1);
+    await Task.Delay(100);
     using (var activity = activitySource.StartActivity("TestDemo2"))
     {
         await Task.Delay(100);
@@ -122,6 +115,7 @@ app.MapGet("/delay", async() =>
     return Results.Ok();
 });
 
+// Endpoint pour montrer que l'on peut cacher des informations sensibles comme les mots de passes etc.
 app.MapPost("/login", (ILogger<Program> logger, [FromBody] LoginData data) =>
 {
     logger.LogInformation("User login attempted: Username {Username}, Password {Password}", data.Username, data.Password);
@@ -129,7 +123,7 @@ app.MapPost("/login", (ILogger<Program> logger, [FromBody] LoginData data) =>
     return Results.Unauthorized();
 });
 
-
+// démarrage de l'app
 app.Run();
 
 internal record LoginData(string Username, string Password);

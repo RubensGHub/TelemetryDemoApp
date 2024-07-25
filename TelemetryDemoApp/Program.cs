@@ -18,17 +18,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configuration des ressources pour identifier le service
 var resourceBuilder = ResourceBuilder.CreateDefault()
-    .AddService(serviceName: "Cosoluce.AppDemo", serviceVersion: "1.0.1")
+    .AddService(serviceName: "AppDemo", serviceVersion: "1.0.0")
     .AddTelemetrySdk()
     .AddAttributes(new Dictionary<string, object>
     {
         ["Host.name"] = Environment.MachineName,
         ["OS.name"] = RuntimeInformation.OSDescription,
-        ["Environment"] =
-            builder.Environment.EnvironmentName.ToLowerInvariant(),
+        ["Environment"] = builder.Environment.EnvironmentName.ToLowerInvariant(),
     });
 
-// Configure OpenTelemetry pour les logs
+// Configuration d'OpenTelemetry pour les logs
 builder.Logging.ClearProviders();
 builder.Logging.AddOpenTelemetry(loggerOptions =>
     {
@@ -38,11 +37,10 @@ builder.Logging.AddOpenTelemetry(loggerOptions =>
         loggerOptions
             .SetResourceBuilder(resourceBuilder)
             .AddProcessor(new CustomLogProcessor())
-            .AddConsoleExporter()
             .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
     });
 
-// Configure OpenTelemetry pour les traces
+// Configuration d'OpenTelemetry pour les traces
 builder.Services.AddOpenTelemetry().WithTracing(tracerOptions =>
 {
     tracerOptions
@@ -53,7 +51,7 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerOptions =>
         .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
 });
 
-// Configure OpenTelemetry pour les metrics
+// Configuration d'OpenTelemetry pour les metrics
 builder.Services.AddOpenTelemetry().WithMetrics(MetricsOptions =>
 {
     MetricsOptions
@@ -68,11 +66,12 @@ builder.Services.AddOpenTelemetry().WithMetrics(MetricsOptions =>
 var app = builder.Build();
 
 // Création des providers
-var activitySource = new ActivitySource("ActiviteApp");
+var activitySource = new ActivitySource("ActivitesApp");
 var meter = new Meter("MyMeter");
 
-// Création d'instruments de metrics
-var requestCounter = meter.CreateCounter<int>("compute_requests");
+// Création d'instruments de métriques
+var compteur = meter.CreateCounter<int>("requetes");
+
 using var handler = new SocketsHttpHandler()
 {
     ActivityHeadersPropagator = DistributedContextPropagator.CreateDefaultPropagator(),
@@ -82,31 +81,29 @@ using var client = new HttpClient(handler);
 // Endpoint racine qui va, à chaque appel : incrémenter le compteur de 1, créer une activité, logger des traces
 app.MapGet("/", async (ILogger<Program> logger) =>
 {
-    requestCounter.Add(1);
+    compteur.Add(1);
+    // On crée une activité
+    using var activity = activitySource.StartActivity("Get data");
 
-    using (var activity = activitySource.StartActivity("Get data"))
-    {
-        // on peut ajouter des informations à l'activité, qu'on va pouvoir visionner sur Zipkin.
-        activity?.AddTag("sample", "value");
-        Baggage.SetBaggage("user.id", "12345");
+    // on peut ajouter des informations à l'activité, qu'on va pouvoir visionner sur Zipkin.
+    activity?.AddTag("sample", "value");
+    Baggage.SetBaggage("user.id", "12345");
 
-        // Les requêtes http sont suivies par AddHttpClientInstrumentation
-        await client.GetStringAsync("https://example.com");
-        var str1 = await client.GetStringAsync("https://localhost:7123/demo");
+    // Les requêtes http sont suivies par AddHttpClientInstrumentation
+    var str1 = await client.GetStringAsync("https://example.com");
+    var str2 = await client.GetStringAsync("https://localhost:7123/demo");
 
-        logger.LogInformation("Response1 length: {Length}", str1.Length);
-    }
+    logger.LogInformation("Response1 length: {Length}", str1.Length);
 
-    return Results.Ok();
+    Random random = new();
+    int RandomInt = random.Next(101);
+    return ("Salut ! " + RandomInt);
 });
 
 // Autre endpoint de test
-app.MapGet("/test", (HttpContext context) =>
+app.MapGet("/oui", (ILogger<Program> logger) =>
 {
-    var activity = context.Features.Get<IHttpActivityFeature>()?.Activity;
-    activity?.SetTag("foo", "bar");
-
-    return Results.Ok();
+    return ("test");
 });
 
 // démarrage de l'app

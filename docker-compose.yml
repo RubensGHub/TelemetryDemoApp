@@ -60,4 +60,4 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./grafana:/etc/grafana/provisioning
+      - ./config/grafana:/etc/grafana/provisioning

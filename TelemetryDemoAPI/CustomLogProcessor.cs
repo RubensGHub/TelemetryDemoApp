@@ -13,7 +13,6 @@ public class CustomLogProcessor : BaseProcessor<LogRecord>
             new("ProcessID", Environment.ProcessId),
             new("DotnetFramework", RuntimeInformation.FrameworkDescription),
             new("Runtime", RuntimeInformation.RuntimeIdentifier),
-            new("test", data.TraceId)
         };
         
         // Example of masking sensitive data

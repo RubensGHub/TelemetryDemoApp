@@ -1,8 +1,8 @@
 {
   "Version": 1,
-  "Hash": "3hjUVzjnzw2ta3oCSLqU8tAKfTZHtKzlZ6I9JPBGklk=",
-  "Source": "TodoApi",
-  "BasePath": "_content/TodoApi",
+  "Hash": "dA+toGbGwzzVU6x/j4Aw2WizIyaYsOH5XUEiMLPAfpY=",
+  "Source": "GameLibraryApi",
+  "BasePath": "_content/GameLibraryApi",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
