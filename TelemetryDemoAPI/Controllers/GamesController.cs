@@ -9,32 +9,45 @@ namespace GameLibraryAPI.Controllers;
 public class GamesController : ControllerBase
 {
     private readonly GameContext _context;
+    private readonly ILogger<GamesController> _logger;
 
-    public GamesController(GameContext context)
+    public GamesController(GameContext context, ILogger<GamesController> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     // GET: api/Games
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GameDTO>>> GetGames()
-    {
-        return await _context.Games
+    {   
+        _logger.LogInformation("Fonction GetGames appelée.");
+
+        var games = await _context.Games
             .Select(x => ItemToDTO(x))
             .ToListAsync();
+
+        _logger.LogInformation("GetGames a retourné {Count} jeux", games.Count);
+
+        return games;
     }
 
     // GET: api/games/5
     // <snippet_GetByID>
     [HttpGet("{id}")]
-    public async Task<ActionResult<GameDTO>> GetGame(long id)
+    public async Task<ActionResult<GameDTO>> GetGameByID(long id)
     {
+        _logger.LogInformation("Fonction GetGameByID appelée.");
+
         var Game = await _context.Games.FindAsync(id);
 
         if (Game == null)
         {
+            _logger.LogWarning("l'ID '{id}' ne correspond à aucun jeu dans la bibliothèque.", id);
             return NotFound();
         }
+
+        _logger.LogInformation("jeu trouvé : {name}", Game.Name);
 
         return ItemToDTO(Game);
     }
@@ -44,16 +57,21 @@ public class GamesController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     // <snippet_Update>
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutGame(long id, GameDTO GameDTO)
+    public async Task<IActionResult> UpdateGame(long id, GameDTO GameDTO)
     {
+        _logger.LogInformation("Fonction UpdateGame appelée");
+
         if (id != GameDTO.Id)
         {
+            _logger.LogWarning("les ID ne correspondent pas ({id1} et {id2})", id, GameDTO.Id);
             return BadRequest();
         }
 
         var Game = await _context.Games.FindAsync(id);
+
         if (Game == null)
-        {
+        {   
+            _logger.LogWarning("l'ID '{id}' ne correspond à aucun jeu dans la bibliothèque.", id);
             return NotFound();
         }
 
@@ -67,8 +85,11 @@ public class GamesController : ControllerBase
         }
         catch (DbUpdateConcurrencyException) when (!GameExists(id))
         {
+            _logger.LogWarning("l'ID '{id}' ne correspond à aucun jeu dans la bibliothèque.", id);
             return NotFound();
         }
+
+        _logger.LogInformation("Jeu mis à jour.");
 
         return NoContent();
     }
@@ -80,6 +101,8 @@ public class GamesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<GameDTO>> PostGame(GameDTO GameDTO)
     {
+        _logger.LogInformation("Fonction PostGame appelée.");
+
         var Game = new Game
         {   
             Name = GameDTO.Name,
@@ -90,8 +113,10 @@ public class GamesController : ControllerBase
         _context.Games.Add(Game);
         await _context.SaveChangesAsync();
 
+        _logger.LogInformation("'{name}' ajouté à la bibliothèque.", Game.Name);
+
         return CreatedAtAction(
-            nameof(GetGame),
+            nameof(GetGameByID),
             new { id = Game.Id },
             ItemToDTO(Game));
     }
@@ -101,14 +126,20 @@ public class GamesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteGame(long id)
     {
+        _logger.LogInformation("Fonction DeleteGame appelée.");
+
         var Game = await _context.Games.FindAsync(id);
+
         if (Game == null)
-        {
+        {   
+            _logger.LogWarning("l'ID '{id}' ne correspond à aucun jeu dans la bibliothèque.", id);
             return NotFound();
         }
 
         _context.Games.Remove(Game);
         await _context.SaveChangesAsync();
+
+        _logger.LogInformation("le jeu '{name}' a été supprimé avec succès.", Game.Name);
 
         return NoContent();
     }

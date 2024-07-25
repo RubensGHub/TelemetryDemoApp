@@ -1,17 +1,18 @@
 using Microsoft.EntityFrameworkCore;
-using GameLibraryAPI.Models;
-using System.Runtime.InteropServices;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Resources;
 using Microsoft.AspNetCore.Mvc;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Logs;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
+using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
+using GameLibraryAPI.Models;
 
 // Nécessaire si le collecteur n'expose pas un endpoint https
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
+// Création du builder
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuration des services
@@ -20,7 +21,7 @@ builder.Services.AddControllers();
 // Ajout des services aux conteneurs
 builder.Services.AddControllers();
 builder.Services.AddDbContext<GameContext>(opt =>
-    opt.UseInMemoryDatabase("TodoList"));
+    opt.UseInMemoryDatabase("GameLibrary"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -35,12 +36,13 @@ var resourceBuilder = ResourceBuilder.CreateDefault()
     });
 
 // Configuration d'OpenTelemetry pour les logs
-builder.Logging.ClearProviders()
-    .AddOpenTelemetry(loggerOptions =>
+builder.Logging.ClearProviders();
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Information);
+builder.Logging.AddOpenTelemetry(loggerOptions =>
     {   
-        loggerOptions.IncludeFormattedMessage = false;
-        loggerOptions.IncludeScopes = false;
-        loggerOptions.ParseStateValues = false;
+        loggerOptions.IncludeFormattedMessage = true;
+        loggerOptions.IncludeScopes = true;
+        loggerOptions.ParseStateValues = true;
         loggerOptions
             .SetResourceBuilder(resourceBuilder)
             .AddProcessor(new CustomLogProcessor())

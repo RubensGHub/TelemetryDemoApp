@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "D7nVhcdNY4Y=",
+  "dgSpecHash": "8lWsbZCo1fE=",
   "success": true,
   "projectFilePath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\TelemetryDemoAPI\\GameLibraryApi.csproj",
   "expectedPackageFiles": [
@@ -169,6 +169,7 @@
     "C:\\Users\\r-tueux\\.nuget\\packages\\system.io.pipelines\\7.0.0\\system.io.pipelines.7.0.0.nupkg.sha512",
     "C:\\Users\\r-tueux\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\r-tueux\\.nuget\\packages\\system.memory.data\\1.0.2\\system.memory.data.1.0.2.nupkg.sha512",
+    "C:\\Users\\r-tueux\\.nuget\\packages\\system.net.http.json\\8.0.0\\system.net.http.json.8.0.0.nupkg.sha512",
     "C:\\Users\\r-tueux\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
     "C:\\Users\\r-tueux\\.nuget\\packages\\system.reflection.metadata\\7.0.0\\system.reflection.metadata.7.0.0.nupkg.sha512",
     "C:\\Users\\r-tueux\\.nuget\\packages\\system.reflection.metadataloadcontext\\7.0.0\\system.reflection.metadataloadcontext.7.0.0.nupkg.sha512",

@@ -1,20 +1,22 @@
-using System.Runtime.InteropServices;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using Microsoft.AspNetCore.Http.Features;
+using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
-
-
+using AppDemoTelemetry.Models;
 
 // Nécessaire si le collecteur n'expose pas un endpoint https
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
 // Création du builder
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuration des services
+builder.Services.AddHttpClient();
 
 // Configuration des ressources pour identifier le service
 var resourceBuilder = ResourceBuilder.CreateDefault()
@@ -101,9 +103,30 @@ app.MapGet("/", async (ILogger<Program> logger) =>
 });
 
 // Autre endpoint de test
-app.MapGet("/oui", (ILogger<Program> logger) =>
+app.MapGet("/games", async (ILogger<Program> logger, IHttpClientFactory httpClientFactory) =>
 {
-    return ("test");
+    using var activity = activitySource.StartActivity("Get Games");
+
+    var client = httpClientFactory.CreateClient();
+
+    // URL de l'API GameLibrary (Point de terminaison où sont stockés sous forme de JSON les jeux)
+    var apiUrl = "https://localhost:7123/api/Games";
+
+    // Envoyer une requête GET à l'API
+    var response = await client.GetAsync(apiUrl);
+
+    if (response.IsSuccessStatusCode)
+    {
+        // Lire le contenu de la réponse et le désérialiser en liste de GameDTO
+        var games = await response.Content.ReadFromJsonAsync<IEnumerable<GameDTO>>();
+        return Results.Ok(games);
+    }
+    else
+    {
+        // Logger l'erreur et retourner un message d'erreur
+        logger.LogError("Erreur lors de la récupération des jeux : {StatusCode}", response.StatusCode);
+        return Results.Problem("Erreur lors de la récupération des jeux");
+    }
 });
 
 // démarrage de l'app
