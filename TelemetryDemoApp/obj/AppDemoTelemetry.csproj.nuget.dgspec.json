@@ -70,6 +70,14 @@
               "target": "Package",
               "version": "[1.9.0, )"
             },
+            "OpenTelemetry.Instrumentation.Process": {
+              "target": "Package",
+              "version": "[0.5.0-beta.6, )"
+            },
+            "OpenTelemetry.Instrumentation.Runtime": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            },
             "System.Net.Http.Json": {
               "target": "Package",
               "version": "[8.0.0, )"

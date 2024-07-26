@@ -1,21 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GameLibraryAPI.Models;
+using System.Diagnostics.Metrics;
 
 namespace GameLibraryAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class GamesController : ControllerBase
+public class GamesController(GameContext context, ILogger<GamesController> logger, Meter meter) : ControllerBase
 {
-    private readonly GameContext _context;
-    private readonly ILogger<GamesController> _logger;
-
-    public GamesController(GameContext context, ILogger<GamesController> logger)
-    {
-        _context = context;
-        _logger = logger;
-    }
+    private readonly GameContext _context = context;
+    private readonly ILogger<GamesController> _logger = logger;
+    private readonly UpDownCounter<int> _gameUpDownCounter = meter.CreateUpDownCounter<int>("game_count", unit: "game", description: "Total number of games in the library.");
 
     // GET: api/Games
     [HttpGet]
@@ -77,7 +73,7 @@ public class GamesController : ControllerBase
 
         Game.Name = GameDTO.Name;
         Game.Genre = GameDTO.Genre;
-        Game.IsCompleted = GameDTO.IsCompleted;
+        Game.IsOnSteam = GameDTO.IsOnSteam;
 
         try
         {
@@ -107,11 +103,13 @@ public class GamesController : ControllerBase
         {   
             Name = GameDTO.Name,
             Genre = GameDTO.Genre,
-            IsCompleted = GameDTO.IsCompleted            
+            IsOnSteam = GameDTO.IsOnSteam            
         };
 
         _context.Games.Add(Game);
         await _context.SaveChangesAsync();
+
+        _gameUpDownCounter.Add(1);
 
         _logger.LogInformation("'{name}' ajouté à la bibliothèque.", Game.Name);
 
@@ -139,6 +137,8 @@ public class GamesController : ControllerBase
         _context.Games.Remove(Game);
         await _context.SaveChangesAsync();
 
+        _gameUpDownCounter.Add(-1);
+
         _logger.LogInformation("le jeu '{name}' a été supprimé avec succès.", Game.Name);
 
         return NoContent();
@@ -155,6 +155,6 @@ public class GamesController : ControllerBase
            Id = Game.Id,
            Name = Game.Name,
            Genre = Game.Genre,
-           IsCompleted = Game.IsCompleted
+           IsOnSteam = Game.IsOnSteam
        };
 }

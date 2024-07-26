@@ -2,12 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameLibraryAPI.Models;
 
-public class GameContext : DbContext
+public class GameContext(DbContextOptions<GameContext> options) : DbContext(options)
 {
-    public GameContext(DbContextOptions<GameContext> options)
-        : base(options)
-    {
-    }
-
     public DbSet<Game> Games { get; set; } = null!;
 }

@@ -90,3 +90,5 @@ C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug
 C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Binder.dll
 C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\OpenTelemetry.Exporter.OpenTelemetryProtocol.dll
 C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\OpenTelemetry.Extensions.Hosting.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\OpenTelemetry.Instrumentation.Process.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoApp\bin\Debug\net8.0\OpenTelemetry.Instrumentation.Runtime.dll

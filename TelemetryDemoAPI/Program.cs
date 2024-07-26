@@ -17,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configuration des services
 builder.Services.AddControllers();
+builder.Services.AddSingleton(new Meter("MyMeter"));  
 
 // Ajout des services aux conteneurs
 builder.Services.AddControllers();
@@ -67,10 +68,13 @@ builder.Services.AddOpenTelemetry().WithMetrics(MetricsOptions =>
         .SetResourceBuilder(resourceBuilder)
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()
+        .AddProcessInstrumentation()
+        .AddRuntimeInstrumentation()
         .AddMeter("MyMeter")
         .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
 });
 
+// Création de l'app
 var app = builder.Build();
 
 // Création des providers
@@ -78,7 +82,8 @@ var activitySource = new ActivitySource("ActivitesAPI");
 var meter = new Meter("MyMeter");
 
 // Création d'instruments de métriques
-var requestCounter = meter.CreateCounter<int>("requetes");
+var requestCounter = meter.CreateCounter<int>("Requests");
+var gameCountUpDownCounter = meter.CreateUpDownCounter<int>("game_count");
 
 // Configuration du pipeline de requête HTTP
 if (app.Environment.IsDevelopment())

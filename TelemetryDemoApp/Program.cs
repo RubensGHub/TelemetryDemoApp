@@ -60,6 +60,8 @@ builder.Services.AddOpenTelemetry().WithMetrics(MetricsOptions =>
         .SetResourceBuilder(resourceBuilder)
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()
+        .AddProcessInstrumentation()
+        .AddRuntimeInstrumentation()
         .AddMeter("MyMeter")
         .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
 });
@@ -72,7 +74,9 @@ var activitySource = new ActivitySource("ActivitesApp");
 var meter = new Meter("MyMeter");
 
 // Création d'instruments de métriques
-var compteur = meter.CreateCounter<int>("requetes");
+var requestCounter = meter.CreateCounter<int>("requetes");
+var responseTimeHistogram = meter.CreateHistogram<float>("TempsDeReponse", unit: "ms", description: "Histogram of response times");
+meter.CreateObservableGauge("ThreadCount", () => new[] { new Measurement<int>(ThreadPool.ThreadCount) });
 
 using var handler = new SocketsHttpHandler()
 {
@@ -82,8 +86,13 @@ using var client = new HttpClient(handler);
 
 // Endpoint racine qui va, à chaque appel : incrémenter le compteur de 1, créer une activité, logger des traces
 app.MapGet("/", async (ILogger<Program> logger) =>
-{
-    compteur.Add(1);
+{   
+    // On démarre le chronomètre pour l'histogramme
+    var stopwatch = Stopwatch.StartNew();
+    
+    // On incrémente le compteur
+    requestCounter.Add(1, KeyValuePair.Create<string, object?>("test", "test"));
+
     // On crée une activité
     using var activity = activitySource.StartActivity("Get data");
 
@@ -95,16 +104,25 @@ app.MapGet("/", async (ILogger<Program> logger) =>
     var str1 = await client.GetStringAsync("https://example.com");
     var str2 = await client.GetStringAsync("https://localhost:7123/demo");
 
+
+
     logger.LogInformation("Response1 length: {Length}", str1.Length);
 
     Random random = new();
     int RandomInt = random.Next(101);
+
+    stopwatch.Stop();
+
+    responseTimeHistogram.Record(stopwatch.ElapsedMilliseconds, KeyValuePair.Create<string, object?>("endpoint", "root"));
+
     return ("Salut ! " + RandomInt);
 });
 
 // Autre endpoint de test
 app.MapGet("/games", async (ILogger<Program> logger, IHttpClientFactory httpClientFactory) =>
 {
+    var stopwatch = Stopwatch.StartNew();
+
     using var activity = activitySource.StartActivity("Get Games");
 
     var client = httpClientFactory.CreateClient();
@@ -119,12 +137,20 @@ app.MapGet("/games", async (ILogger<Program> logger, IHttpClientFactory httpClie
     {
         // Lire le contenu de la réponse et le désérialiser en liste de GameDTO
         var games = await response.Content.ReadFromJsonAsync<IEnumerable<GameDTO>>();
+
+        stopwatch.Stop();
+        responseTimeHistogram.Record(stopwatch.ElapsedMilliseconds, KeyValuePair.Create<string, object?>("endpoint", "root"));
+
         return Results.Ok(games);
     }
     else
     {
         // Logger l'erreur et retourner un message d'erreur
         logger.LogError("Erreur lors de la récupération des jeux : {StatusCode}", response.StatusCode);
+
+        stopwatch.Stop();
+        responseTimeHistogram.Record(stopwatch.ElapsedMilliseconds, KeyValuePair.Create<string, object?>("endpoint", "root"));
+
         return Results.Problem("Erreur lors de la récupération des jeux");
     }
 });

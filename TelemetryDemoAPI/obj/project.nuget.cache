@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "8lWsbZCo1fE=",
+  "dgSpecHash": "D0sZ6K77Asc=",
   "success": true,
   "projectFilePath": "C:\\Users\\r-tueux\\source\\repos\\Projet\\TelemetryDemoApp\\TelemetryDemoAPI\\GameLibraryApi.csproj",
   "expectedPackageFiles": [
@@ -146,6 +146,8 @@
     "C:\\Users\\r-tueux\\.nuget\\packages\\opentelemetry.extensions.hosting\\1.9.0\\opentelemetry.extensions.hosting.1.9.0.nupkg.sha512",
     "C:\\Users\\r-tueux\\.nuget\\packages\\opentelemetry.instrumentation.aspnetcore\\1.9.0\\opentelemetry.instrumentation.aspnetcore.1.9.0.nupkg.sha512",
     "C:\\Users\\r-tueux\\.nuget\\packages\\opentelemetry.instrumentation.http\\1.9.0\\opentelemetry.instrumentation.http.1.9.0.nupkg.sha512",
+    "C:\\Users\\r-tueux\\.nuget\\packages\\opentelemetry.instrumentation.process\\0.5.0-beta.6\\opentelemetry.instrumentation.process.0.5.0-beta.6.nupkg.sha512",
+    "C:\\Users\\r-tueux\\.nuget\\packages\\opentelemetry.instrumentation.runtime\\1.9.0\\opentelemetry.instrumentation.runtime.1.9.0.nupkg.sha512",
     "C:\\Users\\r-tueux\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "C:\\Users\\r-tueux\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\r-tueux\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",

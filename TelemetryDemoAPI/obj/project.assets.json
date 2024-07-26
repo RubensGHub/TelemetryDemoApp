@@ -2424,6 +2424,38 @@
           }
         }
       },
+      "OpenTelemetry.Instrumentation.Process/0.5.0-beta.6": {
+        "type": "package",
+        "dependencies": {
+          "OpenTelemetry.Api": "[1.9.0, 2.0.0)"
+        },
+        "compile": {
+          "lib/netstandard2.0/OpenTelemetry.Instrumentation.Process.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/OpenTelemetry.Instrumentation.Process.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "OpenTelemetry.Instrumentation.Runtime/1.9.0": {
+        "type": "package",
+        "dependencies": {
+          "OpenTelemetry.Api": "[1.9.0, 2.0.0)"
+        },
+        "compile": {
+          "lib/net6.0/OpenTelemetry.Instrumentation.Runtime.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/OpenTelemetry.Instrumentation.Runtime.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Swashbuckle.AspNetCore/6.4.0": {
         "type": "package",
         "dependencies": {
@@ -7688,6 +7720,38 @@
         "opentelemetry.instrumentation.http.nuspec"
       ]
     },
+    "OpenTelemetry.Instrumentation.Process/0.5.0-beta.6": {
+      "sha512": "mRYkk5H3/cM4fSwhF02PCAo8XtE0Ezn2NWn0KorJlREWvBJXe1lGt7jL1foC9lnfoUULieU7iCudSZTVA9kHqQ==",
+      "type": "package",
+      "path": "opentelemetry.instrumentation.process/0.5.0-beta.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/OpenTelemetry.Instrumentation.Process.dll",
+        "lib/netstandard2.0/OpenTelemetry.Instrumentation.Process.xml",
+        "opentelemetry-icon-color.png",
+        "opentelemetry.instrumentation.process.0.5.0-beta.6.nupkg.sha512",
+        "opentelemetry.instrumentation.process.nuspec"
+      ]
+    },
+    "OpenTelemetry.Instrumentation.Runtime/1.9.0": {
+      "sha512": "6raJb9Pvi1CaBB59SX86Mr9NQiQbiv9ialO+cQKFRGCq3Bl2WC8cTTcbfGtaRX0quqWnZC/dK7xrXuOuYcwANA==",
+      "type": "package",
+      "path": "opentelemetry.instrumentation.runtime/1.9.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net462/OpenTelemetry.Instrumentation.Runtime.dll",
+        "lib/net462/OpenTelemetry.Instrumentation.Runtime.xml",
+        "lib/net6.0/OpenTelemetry.Instrumentation.Runtime.dll",
+        "lib/net6.0/OpenTelemetry.Instrumentation.Runtime.xml",
+        "lib/netstandard2.0/OpenTelemetry.Instrumentation.Runtime.dll",
+        "lib/netstandard2.0/OpenTelemetry.Instrumentation.Runtime.xml",
+        "opentelemetry-icon-color.png",
+        "opentelemetry.instrumentation.runtime.1.9.0.nupkg.sha512",
+        "opentelemetry.instrumentation.runtime.nuspec"
+      ]
+    },
     "Swashbuckle.AspNetCore/6.4.0": {
       "sha512": "eUBr4TW0up6oKDA5Xwkul289uqSMgY0xGN4pnbOIBqCcN9VKGGaPvHX3vWaG/hvocfGDP+MGzMA0bBBKz2fkmQ==",
       "type": "package",
@@ -9199,6 +9263,8 @@
       "OpenTelemetry.Extensions.Hosting >= 1.9.0",
       "OpenTelemetry.Instrumentation.AspNetCore >= 1.9.0",
       "OpenTelemetry.Instrumentation.Http >= 1.9.0",
+      "OpenTelemetry.Instrumentation.Process >= 0.5.0-beta.6",
+      "OpenTelemetry.Instrumentation.Runtime >= 1.9.0",
       "Swashbuckle.AspNetCore >= 6.4.0",
       "System.Net.Http.Json >= 8.0.0"
     ]
@@ -9293,6 +9359,14 @@
             "version": "[1.9.0, )"
           },
           "OpenTelemetry.Instrumentation.Http": {
+            "target": "Package",
+            "version": "[1.9.0, )"
+          },
+          "OpenTelemetry.Instrumentation.Process": {
+            "target": "Package",
+            "version": "[0.5.0-beta.6, )"
+          },
+          "OpenTelemetry.Instrumentation.Runtime": {
             "target": "Package",
             "version": "[1.9.0, )"
           },

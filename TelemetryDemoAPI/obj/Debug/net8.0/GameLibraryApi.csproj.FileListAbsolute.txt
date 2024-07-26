@@ -266,3 +266,5 @@ C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\obj\Debug
 C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\obj\Debug\net8.0\GameLibraryApi.pdb
 C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\obj\Debug\net8.0\GameLibraryApi.genruntimeconfig.cache
 C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\obj\Debug\net8.0\ref\GameLibraryApi.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\bin\Debug\net8.0\OpenTelemetry.Instrumentation.Process.dll
+C:\Users\r-tueux\source\repos\Projet\TelemetryDemoApp\TelemetryDemoAPI\bin\Debug\net8.0\OpenTelemetry.Instrumentation.Runtime.dll
