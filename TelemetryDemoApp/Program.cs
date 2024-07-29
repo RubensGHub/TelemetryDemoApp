@@ -1,3 +1,6 @@
+test voir si ça fait des deux côtés
+
+
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Logs;
