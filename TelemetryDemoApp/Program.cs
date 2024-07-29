@@ -1,6 +1,3 @@
-test voir si ça fait des deux côtés
-
-
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Logs;
@@ -77,8 +74,8 @@ var activitySource = new ActivitySource("ActivitesApp");
 var meter = new Meter("MyMeter");
 
 // Création d'instruments de métriques
-var requestCounter = meter.CreateCounter<int>("requetes");
-var responseTimeHistogram = meter.CreateHistogram<float>("TempsDeReponse", unit: "ms", description: "Histogram of response times");
+var requestCounter = meter.CreateCounter<int>("Requests");
+var responseTimeHistogram = meter.CreateHistogram<float>("ResponseTime", unit: "ms", description: "Histogram of response times");
 meter.CreateObservableGauge("ThreadCount", () => new[] { new Measurement<int>(ThreadPool.ThreadCount) });
 
 using var handler = new SocketsHttpHandler()

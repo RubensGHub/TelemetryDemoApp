@@ -42,7 +42,7 @@ services:
 
   jaeger-all-in-one:
     container_name: jaeger
-    image: jaegertracing/all-in-one:1.46
+    image: jaegertracing/all-in-one:latest
     environment:
       - COLLECTOR_OTLP_ENABLED=true
     ports:
@@ -50,14 +50,15 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana:11.0.0
+    image: grafana/grafana:latest
     environment:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_BASIC_ENABLED=false
       - GF_FEATURE_TOGGLES_ENABLE=accessControlOnCall
       - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-lokiexplore-app/grafana-lokiexplore-app-latest.zip;grafana-lokiexplore-app
+      - GF_PROVISIONING_PATH=/etc/grafana/provisioning
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./config/grafana:/etc/grafana/provisioning
+      - ./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
