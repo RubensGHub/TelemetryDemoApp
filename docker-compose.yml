@@ -51,14 +51,26 @@ services:
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
+    env_file:
+      - .env
     environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_LOG_FILTERS=authn.service:critical
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_BASIC_ENABLED=false
       - GF_FEATURE_TOGGLES_ENABLE=accessControlOnCall
       - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-lokiexplore-app/grafana-lokiexplore-app-latest.zip;grafana-lokiexplore-app
       - GF_PROVISIONING_PATH=/etc/grafana/provisioning
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=smtp.gmail.com:587
+      - GF_SMTP_SKIP_VERIFY=true
+      - GF_SMTP_FROM_ADDRESS=${GF_SMTP_USER}
+      - GF_SMTP_FROM_NAME=Grafana
+      - GF_SMTP_EHLO_IDENTITY=localhost
+      - GF_SMTP_STARTTLS_POLICY=Always
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./config/grafana/provisioning:/etc/grafana/provisioning

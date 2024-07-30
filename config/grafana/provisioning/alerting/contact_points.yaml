@@ -1,0 +1,19 @@
+apiVersion: 1
+contactPoints:
+    - orgId: 1
+      name: ContactoPointo
+      receivers:
+        - uid: cdtbih7x71ipub
+          type: discord
+          settings:
+            url: https://discord.com/api/webhooks/1267784961788870687/14MMemwk52gqpNNm2hX93R8cONyPYXPs4E3i4PGWN55sJIXiQ7yElYoFycartJM1cqhH
+            use_discord_username: true
+          disableResolveMessage: false
+        - uid: edtbih7x71iptf
+          type: email
+          settings:
+            addresses: Rubens.tueux@gmail.com
+            singleEmail: false
+            subject: |
+              {{ template "default.title" . }}
+          disableResolveMessage: false

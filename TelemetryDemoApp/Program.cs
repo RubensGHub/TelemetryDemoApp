@@ -91,32 +91,47 @@ app.MapGet("/", async (ILogger<Program> logger) =>
     var stopwatch = Stopwatch.StartNew();
     
     // On incrémente le compteur
-    requestCounter.Add(1, KeyValuePair.Create<string, object?>("test", "test"));
+    requestCounter.Add(1, KeyValuePair.Create<string, object?>("endpoint", "root"));
 
     // On crée une activité
     using var activity = activitySource.StartActivity("Get data");
 
-    // on peut ajouter des informations à l'activité, qu'on va pouvoir visionner sur Zipkin.
+    // On ajoute des informations à l'activité
     activity?.AddTag("sample", "value");
     Baggage.SetBaggage("user.id", "12345");
 
-    // Les requêtes http sont suivies par AddHttpClientInstrumentation
+    // Les requêtes HTTP sont suivies par AddHttpClientInstrumentation
+    var httpClientStopwatch1 = Stopwatch.StartNew();
     var str1 = await client.GetStringAsync("https://example.com");
+    httpClientStopwatch1.Stop();
+
+    var httpClientStopwatch2 = Stopwatch.StartNew();
     var str2 = await client.GetStringAsync("https://localhost:7123/demo");
+    httpClientStopwatch2.Stop();
 
+    // Logger les informations détaillées
+    logger.LogInformation("First HTTP request to example.com took {Duration} ms and returned status {StatusCode} with length {Length}", 
+                          httpClientStopwatch1.ElapsedMilliseconds, "200", str1.Length); // remplacer "200" par la véritable status code si vous la récupérez
 
-
-    logger.LogInformation("Response1 length: {Length}", str1.Length);
+    logger.LogInformation("Second HTTP request to localhost:7123/demo took {Duration} ms and returned status {StatusCode} with length {Length}", 
+                          httpClientStopwatch2.ElapsedMilliseconds, "200", str2.Length); // remplacer "200" par la véritable status code si vous la récupérez
 
     Random random = new();
-    int RandomInt = random.Next(101);
+    int randomInt = random.Next(101);
+
+    // Logger la valeur aléatoire générée
+    logger.LogInformation("Generated random integer: {RandomInt}", randomInt);
 
     stopwatch.Stop();
 
+    // Logger la durée totale de la requête
+    logger.LogInformation("Total request processing time: {Duration} ms", stopwatch.ElapsedMilliseconds);
+
     responseTimeHistogram.Record(stopwatch.ElapsedMilliseconds, KeyValuePair.Create<string, object?>("endpoint", "root"));
 
-    return ("Salut ! " + RandomInt);
+    return ("Salut ! " + randomInt);
 });
+
 
 // Autre endpoint de test
 app.MapGet("/games", async (ILogger<Program> logger, IHttpClientFactory httpClientFactory) =>
@@ -153,6 +168,13 @@ app.MapGet("/games", async (ILogger<Program> logger, IHttpClientFactory httpClie
 
         return Results.Problem("Erreur lors de la récupération des jeux");
     }
+});
+
+// endpoint pour créer un problème et générer une alerte
+app.MapGet("/bug", () =>
+{
+    requestCounter.Add(20, KeyValuePair.Create<string, object?>("endpoint" , "/bug"));
+    return("Veuillez rafraîchir plusieurs fois cette page afin de lancer une alerte.");
 });
 
 // démarrage de l'app

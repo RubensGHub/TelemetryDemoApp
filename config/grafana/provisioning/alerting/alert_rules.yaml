@@ -1,0 +1,136 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: DemoAPI
+      folder: alerts
+      interval: 30s
+      rules:
+        - uid: ddtbup6zsketce
+          title: HighLogingFailureRate
+          condition: C
+          data:
+            - refId: A
+              queryType: instant
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: P8E80F9AEF21F6940
+              model:
+                datasource:
+                    type: loki
+                    uid: P8E80F9AEF21F6940
+                editorMode: code
+                expr: sum(rate({service_name="AppDemoAPI"} |= "User login failed"[45s]))
+                hide: false
+                intervalMs: 1000
+                legendFormat: ""
+                maxDataPoints: 43200
+                queryType: instant
+                refId: A
+            - refId: C
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0.1
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 0s
+          annotations:
+            description: User login failures have occurred more than 5 times in the last minute.
+            summary: High Login Failure Rate
+          labels:
+            severity: warning
+          isPaused: false
+          notification_settings:
+            receiver: ContactoPointo
+    - orgId: 1
+      name: DemoApp
+      folder: alerts
+      interval: 30s
+      rules:
+        - uid: adtb12m2km8e8a
+          title: HighRequestRate
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                disableTextWrap: false
+                editorMode: builder
+                expr: rate(Requests_total[1m])
+                fullMetaSearch: false
+                includeNullMetadata: false
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+                useBackend: false
+            - refId: C
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 10
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          dashboardUid: ""
+          panelId: 0
+          noDataState: NoData
+          execErrState: Error
+          for: 0s
+          annotations:
+            description: The rate of incoming requests has exceeded 10 requests per minute.
+            summary: High Request Rate
+          labels:
+            severity: warning
+          isPaused: false
+          notification_settings:
+            receiver: ContactoPointo
