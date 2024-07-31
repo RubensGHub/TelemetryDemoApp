@@ -15,5 +15,5 @@ contactPoints:
             addresses: Rubens.tueux@gmail.com
             singleEmail: false
             subject: |
-              {{ template "default.title" . }}
+                {{ template "default.title" . }}
           disableResolveMessage: false

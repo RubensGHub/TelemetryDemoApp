@@ -55,8 +55,8 @@ groups:
                 maxDataPoints: 43200
                 refId: C
                 type: threshold
-          noDataState: NoData
-          execErrState: Error
+          noDataState: OK
+          execErrState: OK
           for: 0s
           annotations:
             description: User login failures have occurred more than 5 times in the last minute.
@@ -123,8 +123,8 @@ groups:
                 type: threshold
           dashboardUid: ""
           panelId: 0
-          noDataState: NoData
-          execErrState: Error
+          noDataState: OK
+          execErrState: OK
           for: 0s
           annotations:
             description: The rate of incoming requests has exceeded 10 requests per minute.

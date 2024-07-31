@@ -71,7 +71,7 @@ var app = builder.Build();
 
 // Création des providers
 var activitySource = new ActivitySource("ActivitesApp");
-var meter = new Meter("MyMeter");
+var meter = new Meter("MyMeter", "1.0.0");
 
 // Création d'instruments de métriques
 var requestCounter = meter.CreateCounter<int>("Requests");
