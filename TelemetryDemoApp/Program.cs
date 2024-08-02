@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http.Features;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
-using AppDemoTelemetry.Models;
+using TelemetryDemoApp.Models;
 
 // Nécessaire si le collecteur n'expose pas un endpoint https
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
@@ -133,7 +133,7 @@ app.MapGet("/", async (ILogger<Program> logger) =>
 });
 
 
-// Autre endpoint de test
+// Endpoint d'appel à l'API pour récupérer les jeux présents actuellement dans la base de donnée
 app.MapGet("/games", async (ILogger<Program> logger, IHttpClientFactory httpClientFactory) =>
 {
     var stopwatch = Stopwatch.StartNew();

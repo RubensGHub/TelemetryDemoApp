@@ -1,4 +1,4 @@
-namespace AppDemoTelemetry.Models;
+namespace TelemetryDemoApp.Models;
 
 public class GameDTO
 {

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameLibraryApi", "TelemetryDemoAPI\GameLibraryApi.csproj", "{D1A0BDBF-262A-40EE-9FC5-69A313B2AE04}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppDemoTelemetry", "TelemetryDemoApp\AppDemoTelemetry.csproj", "{407391D7-8BB1-4507-BB45-4DB654075F66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelemetryDemoApp", "TelemetryDemoApp\TelemetryDemoApp.csproj", "{407391D7-8BB1-4507-BB45-4DB654075F66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
